@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tarea Auditoria", "Tarea Auditoria\Tarea Auditoria.vcxproj", "{AF34F18B-CD6F-4514-97FB-7FF7983C8D88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF34F18B-CD6F-4514-97FB-7FF7983C8D88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AF34F18B-CD6F-4514-97FB-7FF7983C8D88}.Debug|Win32.Build.0 = Debug|Win32
+		{AF34F18B-CD6F-4514-97FB-7FF7983C8D88}.Release|Win32.ActiveCfg = Release|Win32
+		{AF34F18B-CD6F-4514-97FB-7FF7983C8D88}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
