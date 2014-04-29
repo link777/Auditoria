@@ -64,6 +64,7 @@ namespace TareaAuditoria {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Encriptar::typeid));
 			this->btnSalir = (gcnew System::Windows::Forms::Button());
 			this->btnAbrir = (gcnew System::Windows::Forms::Button());
 			this->lblArchivo = (gcnew System::Windows::Forms::Label());
@@ -122,6 +123,7 @@ namespace TareaAuditoria {
 			this->tboxArchivo->Size = System::Drawing::Size(312, 20);
 			this->tboxArchivo->TabIndex = 3;
 			this->tboxArchivo->Text = L"C:\\";
+			this->tboxArchivo->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Encriptar::tboxArchivo_KeyDown);
 			// 
 			// openTxt
 			// 
@@ -160,6 +162,7 @@ namespace TareaAuditoria {
 			this->tboxClave->Size = System::Drawing::Size(204, 20);
 			this->tboxClave->TabIndex = 6;
 			this->tboxClave->UseSystemPasswordChar = true;
+			this->tboxClave->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Encriptar::tboxClave_KeyDown);
 			// 
 			// lblConfirmar
 			// 
@@ -177,6 +180,7 @@ namespace TareaAuditoria {
 			this->tboxConfirmar->Size = System::Drawing::Size(204, 20);
 			this->tboxConfirmar->TabIndex = 8;
 			this->tboxConfirmar->UseSystemPasswordChar = true;
+			this->tboxConfirmar->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Encriptar::tboxConfirmar_KeyDown);
 			// 
 			// saveTxt
 			// 
@@ -198,6 +202,7 @@ namespace TareaAuditoria {
 			this->Controls->Add(this->lblArchivo);
 			this->Controls->Add(this->btnAbrir);
 			this->Controls->Add(this->btnSalir);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"Encriptar";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
@@ -214,7 +219,6 @@ namespace TareaAuditoria {
 			}
 
 	private: System::Void Encriptar_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
-
 			 }
 	private: System::Void btnSalir_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Application::Exit();
@@ -222,30 +226,11 @@ namespace TareaAuditoria {
 	private: System::Void btnAbrir_Click(System::Object^  sender, System::EventArgs^  e) {
 				
 				String ^ dirArchivo = gcnew String(""); // Declaro String "contArchivo" para guardar el contenido del archivo.
-				String ^ contArchivo = gcnew String("");
-				String ^ contArchivoAux = gcnew String("");
 				
-				//lblArchivo->Text = Convert::ToString(i);
-
 				if( openTxt->ShowDialog() == System::Windows::Forms::DialogResult::OK )
 					{
 						tboxArchivo->Text = openTxt->FileName; // Pongo directorio en Textbox.
 						dirArchivo = tboxArchivo->Text; // Leo el Directorio en el Textbox en caso de que cambie.
-
-						contArchivo = System::IO::File::ReadAllText(dirArchivo); // Guardo el contenido en el string.		
-						 for(int i=0; i <= (contArchivo->Length); i++)
-						 {
-							 //MessageBox::Show(Convert::ToString(contArchivo[i])); mostrar cada caracter
-							 //contArchivoAux[1] = contArchivo[i];
-							 MessageBox::Show(Convert::ToString(contArchivoAux[i]));
-						 }
-						
-						
-						
-						lblArchivo->Text = contArchivo; // Muestro el contenido en el label.
-
-
-						MessageBox::Show(System::IO::File::ReadAllText(dirArchivo));
 					}
 
 			 }
@@ -257,7 +242,6 @@ namespace TareaAuditoria {
 			String ^ contEncriptado = gcnew String(""); // Declaro String "contEncriptado" para guardar el contenido encriptado del archivo.
 			String ^ clave = gcnew String(""); // Declaro String "Clave" para guardar la clave usada para encriptar del archivo.
 
-
 			try{
 				dirArchivo = tboxArchivo->Text;
 				contArchivo = System::IO::File::ReadAllText(dirArchivo);
@@ -268,8 +252,46 @@ namespace TareaAuditoria {
 							
 									clave = tboxClave->Text; // Asigno la clave a la variable.
 
+									contArchivo = System::IO::File::ReadAllText(dirArchivo); // Guardo el contenido en el string.		
+									
+									array<Char>^ caracterArray = contArchivo->ToCharArray();
+									array<Char>^ claveArray = clave->ToCharArray();
+									array<Char>^ caracterChar = contArchivo->ToCharArray();;
+									int caracterInt = 0;
+									int sumaInt = 0;
+									int incremento = 0;
+		
+						
+									try{
+										for(int k=0; k <= (clave->Length); k++)
+										{
+											sumaInt = sumaInt+int(claveArray[k]);
+										}
 
-									contEncriptado = String::Concat(contArchivo,clave); // Contenido encriptado usando la clave.
+							
+									}
+									catch(System::IndexOutOfRangeException ^e){
+										Console::WriteLine(e);
+									}
+
+									//MessageBox::Show(Convert::ToString(sumaInt));
+
+									incremento = ((sumaInt%7)+(sumaInt%13))+(sumaInt%17);
+									
+									//MessageBox::Show(Convert::ToString(incremento));
+
+										try{
+											for(int i=0; i <= (contArchivo->Length); i++){																	
+												caracterInt = int(caracterArray[i]); // Caracter a ASCII
+												contEncriptado = contEncriptado+Convert::ToString(Convert::ToChar(caracterInt+incremento)); // Pasar ASCII a Caracter, y juntarlo al string.								
+											}
+										}
+										catch(System::IndexOutOfRangeException ^e){
+											Console::WriteLine(e);
+										}
+										
+										//MessageBox::Show(Convert::ToString(contEncriptado));
+
 									System::IO::File::WriteAllText(saveTxt->FileName,contEncriptado);
 									MessageBox::Show("¡Archivo encriptado con exito!","Exito");
 									this->Close();
@@ -288,5 +310,19 @@ namespace TareaAuditoria {
 			MessageBox::Show("Archivo no encontrado.","Error",MessageBoxButtons::OK,MessageBoxIcon::Exclamation,MessageBoxDefaultButton::Button1);
 			}
 		}
-	};
+	private: System::Void tboxArchivo_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+				if (e->KeyCode == Keys::Enter )
+                btnEncriptar_Click(sender, e);
+			 }
+
+	private: System::Void tboxClave_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+				if (e->KeyCode == Keys::Enter )
+                btnEncriptar_Click(sender, e);
+			 }
+
+	private: System::Void tboxConfirmar_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+				if (e->KeyCode == Keys::Enter )
+                btnEncriptar_Click(sender, e);
+			 }
+};
 }

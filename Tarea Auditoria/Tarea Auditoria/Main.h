@@ -55,6 +55,7 @@ namespace TareaAuditoria {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Main::typeid));
 			this->btnEncriptar = (gcnew System::Windows::Forms::Button());
 			this->btnDesencriptar = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
@@ -96,12 +97,13 @@ namespace TareaAuditoria {
 			this->ClientSize = System::Drawing::Size(284, 262);
 			this->Controls->Add(this->btnDesencriptar);
 			this->Controls->Add(this->btnEncriptar);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->MaximumSize = System::Drawing::Size(300, 300);
 			this->MinimumSize = System::Drawing::Size(300, 300);
 			this->Name = L"Main";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			this->Text = L"Main";
+			this->Text = L"Auditoria";
 			this->Load += gcnew System::EventHandler(this, &Main::Main_Load);
 			this->ResumeLayout(false);
 
