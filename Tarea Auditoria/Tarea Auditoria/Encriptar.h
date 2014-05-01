@@ -298,7 +298,7 @@ namespace TareaAuditoria {
 			}				
 			catch(System::Exception ^e){
 			Console::WriteLine(e);
-			MessageBox::Show(Convert::ToString(e),"Error",MessageBoxButtons::OK,MessageBoxIcon::Exclamation,MessageBoxDefaultButton::Button1);
+			MessageBox::Show("Archivo no encontrado.","Error",MessageBoxButtons::OK,MessageBoxIcon::Exclamation,MessageBoxDefaultButton::Button1);
 			}
 		}
 	private: System::Void tboxArchivo_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
