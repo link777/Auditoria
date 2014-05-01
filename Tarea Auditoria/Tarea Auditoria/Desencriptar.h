@@ -34,9 +34,9 @@ namespace TareaAuditoria {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::TextBox^  tboxConfirmar;
+
 	protected: 
-	private: System::Windows::Forms::Label^  lblConfirmar;
+
 	private: System::Windows::Forms::TextBox^  tboxClave;
 	private: System::Windows::Forms::Label^  lblClave;
 	private: System::Windows::Forms::Button^  btnDesencriptar;
@@ -69,8 +69,6 @@ namespace TareaAuditoria {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Desencriptar::typeid));
-			this->tboxConfirmar = (gcnew System::Windows::Forms::TextBox());
-			this->lblConfirmar = (gcnew System::Windows::Forms::Label());
 			this->tboxClave = (gcnew System::Windows::Forms::TextBox());
 			this->lblClave = (gcnew System::Windows::Forms::Label());
 			this->btnDesencriptar = (gcnew System::Windows::Forms::Button());
@@ -81,24 +79,6 @@ namespace TareaAuditoria {
 			this->saveTxt = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->openTxt = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SuspendLayout();
-			// 
-			// tboxConfirmar
-			// 
-			this->tboxConfirmar->Location = System::Drawing::Point(65, 126);
-			this->tboxConfirmar->Name = L"tboxConfirmar";
-			this->tboxConfirmar->Size = System::Drawing::Size(204, 20);
-			this->tboxConfirmar->TabIndex = 17;
-			this->tboxConfirmar->UseSystemPasswordChar = true;
-			this->tboxConfirmar->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Desencriptar::tboxConfirmar_KeyDown);
-			// 
-			// lblConfirmar
-			// 
-			this->lblConfirmar->AutoSize = true;
-			this->lblConfirmar->Location = System::Drawing::Point(8, 126);
-			this->lblConfirmar->Name = L"lblConfirmar";
-			this->lblConfirmar->Size = System::Drawing::Size(54, 13);
-			this->lblConfirmar->TabIndex = 16;
-			this->lblConfirmar->Text = L"Confirmar:";
 			// 
 			// tboxClave
 			// 
@@ -125,7 +105,7 @@ namespace TareaAuditoria {
 			this->btnDesencriptar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->btnDesencriptar->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->btnDesencriptar->Location = System::Drawing::Point(162, 168);
+			this->btnDesencriptar->Location = System::Drawing::Point(162, 141);
 			this->btnDesencriptar->Name = L"btnDesencriptar";
 			this->btnDesencriptar->Size = System::Drawing::Size(134, 36);
 			this->btnDesencriptar->TabIndex = 13;
@@ -197,8 +177,6 @@ namespace TareaAuditoria {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(466, 216);
-			this->Controls->Add(this->tboxConfirmar);
-			this->Controls->Add(this->lblConfirmar);
 			this->Controls->Add(this->tboxClave);
 			this->Controls->Add(this->lblClave);
 			this->Controls->Add(this->btnDesencriptar);
@@ -242,59 +220,46 @@ namespace TareaAuditoria {
 				dirArchivo = tboxArchivo->Text;
 				contArchivo = System::IO::File::ReadAllText(dirArchivo);
 						
-						if(tboxClave->Text == tboxConfirmar->Text){
-								if( saveTxt->ShowDialog() == System::Windows::Forms::DialogResult::OK ){
+						if( saveTxt->ShowDialog() == System::Windows::Forms::DialogResult::OK ){
 							
-									clave = tboxClave->Text; // Asigno la clave a la variable.
+							clave = tboxClave->Text; // Asigno la clave a la variable.
 
-									contArchivo = System::IO::File::ReadAllText(dirArchivo); // Guardo el contenido en el string.		
+							contArchivo = System::IO::File::ReadAllText(dirArchivo); // Guardo el contenido en el string.		
 									
-									array<Char>^ caracterArray = contArchivo->ToCharArray();
-									array<Char>^ claveArray = clave->ToCharArray();
-									array<Char>^ caracterChar = contArchivo->ToCharArray();;
-									int caracterInt = 0;
-									int sumaInt = 0;
-									int incremento = 0;
+							array<Char>^ caracterArray = contArchivo->ToCharArray();
+							array<Char>^ claveArray = clave->ToCharArray();
+							array<Char>^ caracterChar = contArchivo->ToCharArray();;
+							int caracterInt = 0;
+							int sumaInt = 0;
+							int incremento = 0;
 		
-						
-									try{
-										for(int k=0; k <= (clave->Length); k++)
-										{
-											sumaInt = sumaInt+int(claveArray[k]);
-										}
+
+							for(int k=0; k<(clave->Length); k++)
+							{
+								sumaInt += int(claveArray[k]);
+							}
 
 							
-									}
-									catch(System::IndexOutOfRangeException ^e){
-										Console::WriteLine(e);
-									}
+							//MessageBox::Show(Convert::ToString(sumaInt));
 
-									//MessageBox::Show(Convert::ToString(sumaInt));
-
-									incremento = ((sumaInt%7)+(sumaInt%13))+(sumaInt%17);
+							incremento = ((sumaInt%7)+(sumaInt%13))+(sumaInt%17);
 									
-									//MessageBox::Show(Convert::ToString(incremento));
+							//MessageBox::Show(Convert::ToString(incremento));
 
-										try{
-											for(int i=0; i <= (contArchivo->Length); i++){																	
-												caracterInt = int(caracterArray[i]); // Caracter a ASCII
-												contEncriptado = contEncriptado+Convert::ToString(Convert::ToChar(caracterInt-incremento)); // Pasar ASCII a Caracter, y juntarlo al string.								
-											}
-										}
-										catch(System::IndexOutOfRangeException ^e){
-											Console::WriteLine(e);
-										}
+
+							for(int i=0; i<(contArchivo->Length); i++){																	
+								caracterInt = int(caracterArray[i]); // Caracter a ASCII
+								contEncriptado += Convert::ToString(Convert::ToChar(caracterInt-incremento)); // Pasar ASCII a Caracter, y juntarlo al string.								
+							}
+
 										
-										//MessageBox::Show(Convert::ToString(contEncriptado));
+								//MessageBox::Show(Convert::ToString(contEncriptado));
 
-									System::IO::File::WriteAllText(saveTxt->FileName,contEncriptado);
-									MessageBox::Show("¡Archivo desencriptado con exito!","Exito");
-									this->Close();
-								}
+							System::IO::File::WriteAllText(saveTxt->FileName,contEncriptado);
+							MessageBox::Show("¡Archivo desencriptado con exito!","Exito");
+							this->Close();
 						}
-						else{
-							MessageBox::Show("Las claves no coinciden.","Error",MessageBoxButtons::OK,MessageBoxIcon::Exclamation,MessageBoxDefaultButton::Button1);
-						}
+
 
 			}				
 			catch(System::Exception ^e){
@@ -310,9 +275,6 @@ namespace TareaAuditoria {
 		 		if (e->KeyCode == Keys::Enter )
 				btnDesencriptar_Click(sender, e);
 			 }
-	private: System::Void tboxConfirmar_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-		 		if (e->KeyCode == Keys::Enter )
-				btnDesencriptar_Click(sender, e);
-			 }
+
 };
 }

@@ -244,7 +244,7 @@ namespace TareaAuditoria {
 
 			try{
 				dirArchivo = tboxArchivo->Text;
-				contArchivo = System::IO::File::ReadAllText(dirArchivo);
+				contArchivo = System::IO::File::ReadAllText(dirArchivo, System::Text::Encoding::GetEncoding(1252));
 						
 				if(tboxClave->Text->Length >= 6){
 						if(tboxClave->Text == tboxConfirmar->Text){
@@ -252,7 +252,7 @@ namespace TareaAuditoria {
 							
 									clave = tboxClave->Text; // Asigno la clave a la variable.
 
-									contArchivo = System::IO::File::ReadAllText(dirArchivo); // Guardo el contenido en el string.		
+									contArchivo = System::IO::File::ReadAllText(dirArchivo, System::Text::Encoding::GetEncoding(1252)); // Guardo el contenido en el string.		
 									
 									array<Char>^ caracterArray = contArchivo->ToCharArray();
 									array<Char>^ claveArray = clave->ToCharArray();
@@ -261,36 +261,27 @@ namespace TareaAuditoria {
 									int sumaInt = 0;
 									int incremento = 0;
 		
-						
-									try{
-										for(int k=0; k <= (clave->Length); k++)
-										{
-											sumaInt = sumaInt+int(claveArray[k]);
-										}
+															
+									for(int k=0; k < (clave->Length); k++)
+									{
+										sumaInt += int(claveArray[k]);
+									}
 
 							
-									}
-									catch(System::IndexOutOfRangeException ^e){
-										Console::WriteLine(e);
-									}
-
 									//MessageBox::Show(Convert::ToString(sumaInt));
 
 									incremento = ((sumaInt%7)+(sumaInt%13))+(sumaInt%17);
 									
 									//MessageBox::Show(Convert::ToString(incremento));
 
-										try{
-											for(int i=0; i <= (contArchivo->Length); i++){																	
-												caracterInt = int(caracterArray[i]); // Caracter a ASCII
-												contEncriptado = contEncriptado+Convert::ToString(Convert::ToChar(caracterInt+incremento)); // Pasar ASCII a Caracter, y juntarlo al string.								
-											}
-										}
-										catch(System::IndexOutOfRangeException ^e){
-											Console::WriteLine(e);
-										}
+									
+									for(int i=0; i < (contArchivo->Length); i++){																	
+										caracterInt = int(caracterArray[i]); // Caracter a ASCII
+										contEncriptado += Convert::ToString(Convert::ToChar(caracterInt+incremento)); // Pasar ASCII a Caracter, y juntarlo al string.								
+									}
+
 										
-										//MessageBox::Show(Convert::ToString(contEncriptado));
+									//MessageBox::Show(Convert::ToString(contEncriptado));
 
 									System::IO::File::WriteAllText(saveTxt->FileName,contEncriptado);
 									MessageBox::Show("¡Archivo encriptado con exito!","Exito");
@@ -307,7 +298,7 @@ namespace TareaAuditoria {
 			}				
 			catch(System::Exception ^e){
 			Console::WriteLine(e);
-			MessageBox::Show("Archivo no encontrado.","Error",MessageBoxButtons::OK,MessageBoxIcon::Exclamation,MessageBoxDefaultButton::Button1);
+			MessageBox::Show(Convert::ToString(e),"Error",MessageBoxButtons::OK,MessageBoxIcon::Exclamation,MessageBoxDefaultButton::Button1);
 			}
 		}
 	private: System::Void tboxArchivo_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
